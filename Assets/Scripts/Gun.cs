@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Gun : MonoBehaviour
 {
+    public GameObject droppedWeapon;
+
     public float reloadTime = 1f;
     public float fireRate = 0.15f;
     public int maxSize = 20;
@@ -105,5 +107,12 @@ public class Gun : MonoBehaviour
         }
 
         transform.localPosition = initialPosition;
+    }
+
+    public void Drop()
+    {
+        Instantiate(droppedWeapon, transform.position, transform.rotation);
+
+        Destroy(gameObject);
     }
 }
