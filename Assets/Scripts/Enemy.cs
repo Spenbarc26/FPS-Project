@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour
     private Material originalMat;                // Original material for blinking effect
     public Material hitMat;                      // Material to show when enemy is hit
 
+    public AudioClip shootingSFX;
+
     private NavMeshAgent agent;                  // NavMeshAgent for pathfinding
     public int currentPointIndex = 0;            // Current patrol point index
     public Vector3 currentTarget;                // Current patrol target
@@ -50,20 +52,19 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>(); // NAVMESH: agent used for pathfinding & movement
 
         // Player reference (chase target)
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
 
         // Patrol points setup
-        GameObject patrolParent = GameObject.FindGameObjectWithTag("PatrolPoint");
-        patrolPoints = patrolParent
-            .GetComponentsInChildren<Transform>()
-            .Where(t => t != patrolParent.transform)
-            .ToArray();
+        GameObject patrolPointParent = GameObject.FindWithTag("PatrolPoint");
+        patrolPoints = patrolPointParent.GetComponentsInChildren<Transform>().Where(t => t != patrolPointParent.transform).ToArray();
 
         idleTimeCounter = idleTime;
+
+        currentTarget = patrolPoints[currentPointIndex % patrolPoints.Length].position;
     }
 
 
-    void Update()
+    private void Update()
     {
         LookForPlayer(); // Check if player is visible
 
@@ -111,14 +112,7 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        if (!this.enabled) return;         // Stop all actions if dead
-        rb.freezeRotation = false;         // Allow enemy to tip over
-        transform.rotation = Quaternion.Euler(
-            transform.rotation.x,
-            transform.rotation.y,
-            transform.rotation.z + 5f // Slight rotation on Z so enemy tips over
-        );
-        this.enabled = false;              // Disable script
+        Destroy(gameObject);// Disable script
     }
 
     IEnumerator Blink()
@@ -132,7 +126,7 @@ public class Enemy : MonoBehaviour
     {
         agent.ResetPath();                  // Stand still
         idleTimeCounter -= Time.deltaTime;
-        if (idleTimeCounter <= 0f)
+        if (idleTimeCounter < 0)
         {
             state = State.Patrolling;      // Switch to patrol after idle
             idleTimeCounter = idleTime;    // Reset idle timer
@@ -141,10 +135,10 @@ public class Enemy : MonoBehaviour
 
     private void Patrolling()
     {
-        if (Vector3.Distance(transform.position, currentTarget) < positionThreshold)
+        if (Vector3.Distance(currentTarget, transform.position) < positionThreshold)
         {
-            float chance = Random.Range(0f, 100f);
-            if (chance < 10f)
+            float chance = Random.Range(0, 100);
+            if (chance < 10)
             {
                 state = State.Idle;         // 10% chance to idle at patrol point
                 return;
@@ -233,8 +227,6 @@ public class Enemy : MonoBehaviour
             }
 
         }
-
-        SetLastKnownPlayerPosition();
     }
 
     private void Shoot()
@@ -255,18 +247,13 @@ public class Enemy : MonoBehaviour
             float randomPitch = Random.Range(-currentInaccuracy, currentInaccuracy);
             // Apply inaccuracy and rotate bullet towards player
             bulletRotation *= Quaternion.Euler(randomPitch, randomYaw + 90f, 0f);
+
+            AudioManager.Instance.PlaySFX(shootingSFX, 0.5f);
+
             // Spawn the bullet prefab at the spawn point with calculated rotation
-            Instantiate(
-            bulletPrefab,
-            bulletSpawnPoint.position,
-            bulletRotation
-            );
+            Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletRotation);
             // Spawn weapon flash effect at the spawn point
-            Instantiate(
-            weaponFlash,
-            bulletSpawnPoint.position,
-            bulletSpawnPoint.rotation
-            );
+            Instantiate(weaponFlash, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
             // Record the time of this shot
             lastShotTime = Time.time;
         }

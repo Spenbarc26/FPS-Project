@@ -248,6 +248,7 @@ MonoBehaviour:
   weaponFlash: {fileID: 3727095252931926814, guid: 38c0f04e6c28d4d45b52fdd7374aaa55, type: 3}
   health: 100
   hitMat: {fileID: 2100000, guid: 0d75edd5e3eac634cb07fe169858adb4, type: 2}
+  shootingSFX: {fileID: 8300000, guid: cf3a4e796dd9c7149939a32c011c7b30, type: 3}
   currentPointIndex: 0
   currentTarget: {x: 0, y: 0, z: 0}
   positionThreshold: 2
@@ -255,10 +256,7 @@ MonoBehaviour:
   attackDistance: 5
   maxVisionDistance: 20
   minimumChasingHealth: 30
-  patrolPoints:
-  - {fileID: 1868020249}
-  - {fileID: 1116281110}
-  - {fileID: 1683264331}
+  patrolPoints: []
   state: 0
 --- !u!54 &127211154
 Rigidbody:
@@ -702,6 +700,50 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &419282010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 419282012}
+  - component: {fileID: 419282011}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &419282011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419282010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3b458824bc47ce488ea500a2862f299, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+--- !u!4 &419282012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419282010}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &578988420
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,7 +857,7 @@ Transform:
   m_GameObject: {fileID: 578988420}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -5.95, y: 0, z: -33.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -899,6 +941,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 8
+  footStepSFX: {fileID: 8300000, guid: 93f69eb6ea3227c4798cf668cfbace42, type: 3}
 --- !u!114 &578988428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -940,6 +983,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   health: 100
+  hitSFX: {fileID: 8300000, guid: ff2bd84d3b1903f4180727b399068ea6, type: 3}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1335,7 +1379,7 @@ Transform:
   m_GameObject: {fileID: 1116281109}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.5, y: 0, z: -18.5}
+  m_LocalPosition: {x: 11.72, y: -1.416667, z: -9.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1546,7 +1590,7 @@ Transform:
   m_GameObject: {fileID: 1683264330}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.7, y: 0, z: -25.2}
+  m_LocalPosition: {x: -0.1, y: -1.416667, z: -14.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1688,7 +1732,7 @@ Transform:
   m_GameObject: {fileID: 1868020248}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.7, y: 0, z: 23.8}
+  m_LocalPosition: {x: -12.5, y: -1.416667, z: -2.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1812,6 +1856,7 @@ MonoBehaviour:
   reloadTime: 1
   fireRate: 0.15
   maxSize: 20
+  shootingSFX: {fileID: 0}
   bullet: {fileID: 5341742223406746680, guid: 9c3cddd6060b7cc4eadfb9cefcf6e7db, type: 3}
   bulletSpawnPoint: {fileID: 7535690309533138545}
   recoilDistance: 0.1
@@ -2504,3 +2549,4 @@ SceneRoots:
   - {fileID: 850651160}
   - {fileID: 1981497439}
   - {fileID: 1546963121}
+  - {fileID: 419282012}

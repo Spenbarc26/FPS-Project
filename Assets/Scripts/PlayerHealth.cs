@@ -4,6 +4,8 @@ public class PlayerHealth : MonoBehaviour
 {
     public int health = 100; // Player starting health
 
+    public AudioClip hitSFX;
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("damage"))
@@ -19,6 +21,7 @@ public class PlayerHealth : MonoBehaviour
 
         PlayerLook.instance.AddShake(0.1f, 0.25f);
         UIManager.instance.InstantiateHitUI();
+        AudioManager.Instance.PlaySFX(hitSFX);
     }
 
     private void CheckDeath()
